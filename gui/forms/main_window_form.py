@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'build_window/window.ui'
+# Form implementation generated from reading ui file 'window.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -34,23 +34,32 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.addEventBtn)
         self.gridLayout = QtWidgets.QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName("lineEdit")
+        self.gridLayout.addWidget(self.lineEdit, 1, 1, 1, 1)
         self.timeEdit = QtWidgets.QTimeEdit(self.centralwidget)
         self.timeEdit.setObjectName("timeEdit")
         self.gridLayout.addWidget(self.timeEdit, 0, 1, 1, 1)
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
-        self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout.addWidget(self.lineEdit, 1, 1, 1, 1)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
+        self.deleteEventBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.deleteEventBtn.setObjectName("deleteEventBtn")
+        self.verticalLayout.addWidget(self.deleteEventBtn)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setObjectName("textEdit")
-        self.horizontalLayout.addWidget(self.textEdit)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_3.addWidget(self.label_3)
+        self.listWidget = QtWidgets.QListWidget(self.centralwidget)
+        self.listWidget.setObjectName("listWidget")
+        self.verticalLayout_3.addWidget(self.listWidget)
+        self.horizontalLayout.addLayout(self.verticalLayout_3)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusBar = QtWidgets.QStatusBar(MainWindow)
@@ -62,8 +71,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Умный календарь"))
         self.returnDateBtn.setText(_translate("MainWindow", "Вернуться к сегодняшней дате"))
         self.addEventBtn.setText(_translate("MainWindow", "Добавить событие"))
-        self.label.setText(_translate("MainWindow", "Время события"))
         self.label_2.setText(_translate("MainWindow", "Название события"))
+        self.label.setText(_translate("MainWindow", "Время события"))
+        self.deleteEventBtn.setText(_translate("MainWindow", "Удалить событие"))
+        self.label_3.setText(_translate("MainWindow", "Ваши события:"))
