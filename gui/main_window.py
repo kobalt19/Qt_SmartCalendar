@@ -1,27 +1,34 @@
 import sys
 from PyQt5 import QtCore, QtWidgets
-from .forms.main_window_form import Ui_MainWindow
-from .tools.db_tools import *
-from .tools.event import Event
+from gui.login_dialog import LoginDialog
+from gui.forms.main_window_form import Ui_MainWindow
+from gui.tools.db_tools import *
+from gui.tools.event import Event
+from gui.tools.exceptions import *
+from gui.tools.user import User
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        name, ok_pressed = QtWidgets.QInputDialog.getText(self, 'Введите имя', 'Как вас зовут?')
-        if ok_pressed:
-            res = db_check_and_add_user(name)
-            assert res
-            self.user_id = res
+        self.users = set()
+        self.current_user = None
+        self.loginDialog = LoginDialog(self)
+        self.loginDialog.exec()
         self.addEventBtn.clicked.connect(self.addEvent)
         # self.returnDateBtn.clicked.connect(self.returnDate)
         self.deleteEventBtn.clicked.connect(self.deleteEvents)
         self.messageTimer = QtCore.QTimer(self)
         self.messageTimer.setInterval(2500)
         self.messageTimer.timeout.connect(self.hideBar)
-        self.events = db_get_events(self.user_id)
+        self.events = []
         self.updateListWidget()
+
+    def login(self, user):
+        self.users.add(user)
+        self.current_user = user
+        self.events = db_get_events(self.current_user.get_id())
 
     def updateListWidget(self):
         self.listWidget.clear()
@@ -39,13 +46,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.statusBar.setStyleSheet('background-color: #ff0000;')
             self.messageTimer.start()
             return
-        res = db_add_event(self.user_id, text, dt)
+        res = db_add_event(self.current_user.get_id(), text, dt)
         assert res, ''
         self.statusBar.showMessage(f'Событие успешно добавлено, его текст: {self.lineEdit.text()}')
         self.statusBar.setStyleSheet('background-color: #00ff00;')
         self.messageTimer.start()
-        _id = db_search_event(self.user_id, dt, text)
-        self.events.append(Event(dt, text, _id, self.user_id))
+        _id = db_search_event(self.current_user.get_id(), dt, text)
+        self.events.append(Event(dt, text, _id, self.current_user.get_id()))
         self.updateListWidget()
 
     def deleteEvents(self):
@@ -62,6 +69,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def hideBar(self):
         self.statusBar.showMessage('')
         self.statusBar.setStyleSheet('')
+
+    def error(self):
+        pass
 
 
 if __name__ == '__main__':

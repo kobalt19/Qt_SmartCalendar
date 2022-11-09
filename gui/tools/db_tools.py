@@ -1,5 +1,8 @@
 import os
 import sqlite3
+from gui.tools.diff_tools import *
+from gui.tools.user import User
+from gui.tools.exceptions import *
 
 path = '\\'.join(os.path.realpath('db_tools.py').split('\\')[:-1])
 con = sqlite3.connect(f'{path}\\db\\events_db.sqlite')
@@ -38,14 +41,14 @@ def db_check_and_add_user(name):
     query = f'''
 SELECT user_id
 FROM users
-WHERE name = '{name}';
+WHERE username_encr = '{encrypt(name)}';
     '''
     res = cur.execute(query).fetchall()
     if res:
         return res[0][0]
     query = f'''
 INSERT INTO users (name)
-VALUES ('{name}');
+VALUES ('{encrypt(name)}');
     '''
     try:
         cur.execute(query)
@@ -54,7 +57,7 @@ VALUES ('{name}');
     query = f'''
 SELECT user_id
 FROM users
-WHERE name = '{name}';
+WHERE username_encr = '{encrypt(name)}';
     '''
     res = cur.execute(query).fetchall()
     con.commit()
@@ -88,3 +91,16 @@ WHERE user_id = {user_id} AND title = '{text}' AND datetime = '{dt}';
     event_id, *_ = res[0]
     return event_id
 
+
+def db_login(username, passwd):
+    query = f'''
+SELECT passwd_encr, user_id
+FROM users
+WHERE username_encr = '{username}';
+'''
+    res = cur.execute(query).fetchall()
+    if not res:
+        raise LoginNotFound
+    if passwd != res[0][0]:
+        raise IncorrectPassword
+    return res[0][1]
