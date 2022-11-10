@@ -7,6 +7,7 @@ from gui.tools.exceptions import *
 path = '\\'.join(os.path.realpath('db_tools.py').split('\\')[:-1])
 con = sqlite3.connect(f'{path}\\db\\events_db.sqlite')
 cur = con.cursor()
+STEP = 17
 
 
 def db_add_event(user, event, dt):
@@ -41,7 +42,7 @@ def db_check_and_add_user(name):
     query = f'''
 SELECT user_id
 FROM users
-WHERE username_encr = '{encrypt(name)}';
+WHERE username_encr = '{encrypt(name, STEP)}';
     '''
     res = cur.execute(query).fetchall()
     if res:
@@ -57,7 +58,7 @@ VALUES ('{encrypt(name)}');
     query = f'''
 SELECT user_id
 FROM users
-WHERE username_encr = '{encrypt(name)}';
+WHERE username_encr = '{encrypt(name, STEP)}';
     '''
     res = cur.execute(query).fetchall()
     con.commit()
@@ -104,3 +105,17 @@ WHERE username_encr = '{username}';
     if passwd != res[0][0]:
         raise IncorrectPassword
     return res[0][1]
+
+
+def db_register(username, passwd, _query, answ):
+    query = f'''
+INSERT INTO users (passwd_encr, username_encr, query_encr, answer_encr)
+VALUES ('{encrypt(passwd, STEP)}', '{encrypt(username, STEP)}', '{encrypt(_query, STEP)}', '{encrypt(answ, STEP)}');
+'''
+    try:
+        cur.execute(query)
+        con.commit()
+        return True
+    except sqlite3.IntegrityError as err:
+        print(err)
+        return False

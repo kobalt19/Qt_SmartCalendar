@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from gui.forms.login_dialog_form import Ui_LoginDialog
+from gui.register import RegisterDialog
 from gui.tools.db_tools import *
 from gui.tools.user import User
 
@@ -14,6 +15,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
         self.loginBtn.clicked.connect(self.login)
         self.regBtn.clicked.connect(self.register)
         self.recBtn.clicked.connect(self.recover)
+        self.rejected.connect(exit)
 
     def login(self):
         username = self.loginLine.text()
@@ -21,7 +23,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
         try:
             res = db_login(encrypt(username, STEP), encrypt(passwd, STEP))
             self.mw.login(User(encrypt(username, STEP), encrypt(passwd, STEP), res))
-            self.reject()
+            self.accept()
         except (LoginNotFound, IncorrectPassword) as err:
             error_message = QtWidgets.QMessageBox(self)
             error_message.setWindowTitle('Ошибка!')
@@ -29,7 +31,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
             error_message.exec()
 
     def register(self):
-        pass
+        RegisterDialog(self).exec()
 
     def recover(self):
         pass
