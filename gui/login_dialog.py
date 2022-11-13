@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from gui.forms.login_dialog_form import Ui_LoginDialog
-from gui.register import RegisterDialog
+from gui.register_dialog import RegisterDialog
+from gui.rec_dialog import RecDialog
 from gui.tools.db_tools import *
 from gui.tools.user import User
 
@@ -22,7 +23,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
         passwd = self.passwdLine.text()
         try:
             res = db_login(encrypt(username, STEP), encrypt(passwd, STEP))
-            self.mw.login(User(encrypt(username, STEP), encrypt(passwd, STEP), res))
+            self.mw.login(User(encrypt(username, STEP), encrypt(passwd, STEP), *res))
             self.accept()
         except (LoginNotFound, IncorrectPassword) as err:
             error_message = QtWidgets.QMessageBox(self)
@@ -31,7 +32,9 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
             error_message.exec()
 
     def register(self):
+        self.loginLine.clear()
+        self.passwdLine.clear()
         RegisterDialog(self).exec()
 
     def recover(self):
-        pass
+        RecDialog(self).exec()

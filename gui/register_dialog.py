@@ -14,7 +14,7 @@ class RegisterDialog(QtWidgets.QDialog, Ui_RegisterDialog):
     def clear(self):
         for line in {self.loginLine, self.passwdLine,
                      self.passwdRepLine, self.queryLine, self.answLine}:
-            line.setText('')
+            line.clear()
 
     def register(self):
         username = self.loginLine.text()
@@ -37,13 +37,13 @@ class RegisterDialog(QtWidgets.QDialog, Ui_RegisterDialog):
             error_message.exec()
             self.clear()
         else:
-            res = db_register(username, passwd, query, answ)
+            res = db_register(*(encrypt(line, STEP) for line in (username, passwd, query, answ)))
             if res:
-                error_message = QtWidgets.QMessageBox(self)
-                error_message.setWindowTitle('Поздравляем!')
-                error_message.setText('Вы успешно зарегистрировались!')
-                error_message.exec()
-                self.reject()
+                message = QtWidgets.QMessageBox(self)
+                message.setWindowTitle('Поздравляем!')
+                message.setText('Вы успешно зарегистрировались!')
+                message.exec()
+                self.accept()
             if not res:
                 error_message = QtWidgets.QMessageBox(self)
                 error_message.setWindowTitle('Ошибка!')
