@@ -1,8 +1,10 @@
 class User:
-    def __init__(self, username, passwd, _id):
+    def __init__(self, username, passwd, id_, query, answ):
         self.username_encr = username
         self.passwd_encr = passwd
-        self._id = _id
+        self.query_encr = query
+        self.answ_encr = answ
+        self.id = id_
         self.query = None
         self.answ = None
 
@@ -10,10 +12,13 @@ class User:
         return sum(map(hash, self.get_all()))
 
     def get_all(self):
-        return self.username_encr, self.passwd_encr, self._id
+        return self.username_encr, self.passwd_encr, self.id, self.query, self.answ
+
+    def get_login(self):
+        return self.username_encr
 
     def get_id(self):
-        return self._id
+        return self.id
 
     def get_data(self):
         return self.username_encr, self.passwd_encr
