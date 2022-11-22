@@ -1,7 +1,6 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from gui.forms.register_dialog_form import Ui_RegisterDialog
 from gui.tools.db_tools import *
-from gui.tools.user import User
 
 
 class RegisterDialog(QtWidgets.QDialog, Ui_RegisterDialog):

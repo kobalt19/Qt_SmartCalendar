@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from gui.tools.db_tools import *
 from gui.tools.diff_tools import *
 from gui.tools.exceptions import *

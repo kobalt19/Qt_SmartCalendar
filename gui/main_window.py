@@ -22,7 +22,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.deleteEventBtn.clicked.connect(self.deleteEvents)
         self.userChangeBtn.clicked.connect(self.changeUser)
         self.messageTimer = QtCore.QTimer(self)
-        self.setupMessageTimer()
         self.eventTimer = QtCore.QTimer(self)
         self.setupEventTimer()
         self.baseTimer = QtCore.QTimer(self)
@@ -43,10 +42,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.baseTimer.setInterval(1000)
         self.baseTimer.timeout.connect(self.refresh)
         self.baseTimer.start()
-
-    def setupMessageTimer(self):
-        self.messageTimer.setInterval(2500)
-        self.messageTimer.timeout.connect(self.hideBar)
 
     def setupEventTimer(self):
         self.eventTimer.setInterval(5000)
@@ -150,5 +145,3 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     not event.get_first() and not event.get_second():
                 self.eventNotification(timedelta, event.get_text())
                 event.set_second()
-        login = decrypt(self.current_user.get_login(), STEP)
-        self.currentUserLabel.setText(login)

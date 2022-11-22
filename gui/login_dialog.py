@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from gui.forms.login_dialog_form import Ui_LoginDialog
 from gui.register_dialog import RegisterDialog
 from gui.rec_dialog import RecDialog
@@ -21,6 +21,20 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
     def login(self):
         username = self.loginLine.text()
         passwd = self.passwdLine.text()
+        if not username:
+            error_message = QtWidgets.QMessageBox(self)
+            error_message.setWindowTitle('Ошибка!')
+            error_message.setText('Введите имя пользователя!')
+            error_message.exec()
+            self.clear()
+            return None
+        if not passwd:
+            error_message = QtWidgets.QMessageBox(self)
+            error_message.setWindowTitle('Ошибка!')
+            error_message.setText('Введите пароль!')
+            error_message.exec()
+            self.clear()
+            return None
         try:
             res = db_login(encrypt(username, STEP), encrypt(passwd, STEP))
             self.mw.login(User(encrypt(username, STEP), encrypt(passwd, STEP), *res))
@@ -30,10 +44,14 @@ class LoginDialog(QtWidgets.QDialog, Ui_LoginDialog):
             error_message.setWindowTitle('Ошибка!')
             error_message.setText(str(err))
             error_message.exec()
+            self.clear()
 
-    def register(self):
+    def clear(self):
         self.loginLine.clear()
         self.passwdLine.clear()
+
+    def register(self):
+        self.clear()
         RegisterDialog(self).exec()
 
     def recover(self):
